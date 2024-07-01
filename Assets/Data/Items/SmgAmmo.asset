@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97b953cdd257aed4ab0070f9c44f1162, type: 3}
-  m_Name: Jacket
+  m_Script: {fileID: 11500000, guid: c4d4ee1c80576664ab805dd7a0eca0f8, type: 3}
+  m_Name: SmgAmmo
   m_EditorClassIdentifier: 
-  Name: "\u041A\u0443\u0440\u0442\u043A\u0430"
-  Icon: {fileID: 21300000, guid: 1f3ab0860b05118498f900228b1062e6, type: 3}
-  MaxStacks: 1
-  Weight: 1
-  ItemType: 2
-  Defence: 5
+  Name: 5.45x39mm
+  Icon: {fileID: 21300000, guid: 388279e725ebb634bbd091c572c4389b, type: 3}
+  MaxStacks: 30
+  ItemType: 0
