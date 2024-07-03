@@ -10,11 +10,17 @@ public class WeaponUI : MonoBehaviour
     void Start()
     {
         _weapon = GetComponent<Weapon>();
-        _weapon.OnShoot += UpdateUI;
+        _weapon.OnAmmoChange += UpdateUI;
+        UpdateUI(_weapon.Ammo);
     }
 
-    private void UpdateUI()
+    private void UpdateUI(int ammo)
     {
-        _ammoCount.text = _weapon.Ammo.ToString();
+        _ammoCount.text = ammo.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        _weapon.OnAmmoChange -= UpdateUI;
     }
 }

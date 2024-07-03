@@ -6,9 +6,10 @@ using System;
 
 public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
-    public event Action<Item> OnSlotClick;
+    public event Action<Item, InventorySlot> OnSlotClick;
     public Item ContainedItem => _containedItem;
     public bool HasItem => _hasItem;
+    public bool IsDragable => _isDragable;
 
     [SerializeField] private TMP_Text _itemsCountText;
     [SerializeField] private Image _icon;
@@ -16,6 +17,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
     private Image _slotImage;
 
     private bool _hasItem = false;
+    private bool _isDragable = true;
 
     private Inventory _inventory;
 
@@ -40,12 +42,25 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
 
     private void SlotClick()
     {
-        OnSlotClick?.Invoke(_containedItem);
+        OnSlotClick?.Invoke(_containedItem, this);
     }
 
     public void SetOriginalParent(Transform parent)
     {
         _originalParent = parent;
+    }
+    public void SetToEquipmentSlot(bool inSlot)
+    {
+        if (inSlot)
+        {
+            _isDragable = false;
+            _slotImage.raycastTarget = false;
+        }
+        else
+        {
+            _isDragable = true;
+            _slotImage.raycastTarget = true;
+        }
     }
 
     public void AddItem(Item item)
@@ -60,10 +75,22 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
         _hasItem = true;
 
         _containedItem.OnItemRemove += RemoveItem;
+        _containedItem.OnItemUse += UseItem;
+        _containedItem.OnStackChange += UpdateUI;
 
         CheckItemStacks();
 
         UpdateUI();
+    }
+
+    private void UseItem(Item item)
+    {
+        _inventory.UseItem(item);
+    }
+
+    public void EquipItem(InventorySlot slot)
+    {
+        _inventory.EquipItem(slot);
     }
 
     private void CheckItemStacks()
@@ -90,11 +117,13 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
     private void OnDestroy()
     {
         _containedItem.OnItemRemove -= RemoveItem;
+        _containedItem.OnItemUse -= UseItem;
+        _containedItem.OnStackChange -= UpdateUI;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (HasItem)
+        if (HasItem && IsDragable)
         {
             transform.SetParent(_draggingParent, true);
             transform.SetAsLastSibling();
@@ -104,7 +133,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (HasItem)
+        if (HasItem && IsDragable)
         {
             transform.position = Input.mousePosition;
         }
@@ -112,7 +141,7 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (HasItem)
+        if (HasItem && IsDragable)
         {
             int closestCellIndex = 0;
             for (int i = 0; i < _content.childCount; i++)
@@ -171,8 +200,6 @@ public class InventorySlot : MonoBehaviour, IDragHandler, IEndDragHandler, IBegi
             {
                 transform.SetParent(_originalParent);
             }
-
-
 
 
             _slotImage.raycastTarget = true;

@@ -4,6 +4,7 @@ using UnityEngine;
 public class EquipmentItemAsset : ItemAsset
 {
     public int Defence;
+    public EquipmentType Type;
 
     private void OnEnable()
     {

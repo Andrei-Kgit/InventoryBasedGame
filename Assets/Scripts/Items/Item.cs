@@ -3,7 +3,8 @@ using UnityEngine;
 
 public abstract class Item
 {
-    public event Action OnItemUse;
+    public event Action<Item> OnItemUse;
+    public event Action OnStackChange;
     public event Action OnItemRemove;
 
     public string Name => _name;
@@ -56,15 +57,20 @@ public abstract class Item
         _currentStacks += mod;
 
         if (_currentStacks <= 0)
+        {
             _currentStacks = 0;
+            RemoveItem();
+        }
 
         if (_currentStacks > _maxStacks)
             _currentStacks = _maxStacks;
+
+        OnStackChange?.Invoke();
     }
 
     public virtual void Use()
     {
-        OnItemUse?.Invoke();
+        OnItemUse?.Invoke(this);
     }
 
     public virtual void RemoveItem()

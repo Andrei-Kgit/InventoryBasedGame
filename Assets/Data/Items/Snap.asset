@@ -15,5 +15,7 @@ MonoBehaviour:
   Name: "\u041A\u0435\u043F\u043A\u0430"
   Icon: {fileID: 21300000, guid: 3b86664db37409d4286c156bdd786cf5, type: 3}
   MaxStacks: 1
+  Weight: 0
   ItemType: 2
   Defence: 3
+  Type: 1

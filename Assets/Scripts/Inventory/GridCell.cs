@@ -1,23 +1,21 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class GridCell : MonoBehaviour, IDropHandler
+public class GridCell : MonoBehaviour
 {
+    public InventorySlot InventorySlot => _inventorySlot;
+    public EquipmentType EquipmentType => _equipmentType;
+    [SerializeField] private EquipmentType _equipmentType;
     private InventorySlot _inventorySlot;
-    private bool _hasSlot = false;
 
     public void TakeSlot(InventorySlot slot)
     {
         _inventorySlot = slot;
-        _hasSlot = true;
     }
-    public InventorySlot ReleseSlot()
-    {
-        _hasSlot = false;
-        return _inventorySlot;
-    }
+}
 
-    public void OnDrop(PointerEventData eventData)
-    {
-    }
+public enum EquipmentType
+{
+    None,
+    Head,
+    Body,
 }
